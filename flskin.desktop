@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=FLSkin
+Comment=Temas FLinux-JC: tema por defecto y modo oscuro
+Exec=flskin
+Icon=flskin
+X-FullPathIcon=/usr/local/share/pixmaps/flskin.png
+Terminal=false
+Categories=Settings;DesktopSettings;
