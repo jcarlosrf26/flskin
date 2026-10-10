@@ -1,78 +1,99 @@
-# FLSkin — Interruptor de temas de FLinux-JC
+# FLSkin — Temas para FLinux-JC
 
-Programa gráfico en C++ con FLTK para Tiny Core Linux 17.1 x86 (32 bits),
-pensado para FLinux-JC. Una ventana sencilla, al estilo de FLConnect, con
-**botones ON / OFF** (el estado activo va resaltado) para dos ajustes.
-Corre como el usuario `tc`, sin root.
+FLSkin cambia el aspecto de **FLinux-JC** (Tiny Core Linux 17.1, 32 bits)
+sin tocar la identidad de la distro: el fondo, el Conky, el tema GTK y el
+modo oscuro de las aplicaciones, desde una ventana con dos interruptores.
 
 ![Licencia GPL v3](https://img.shields.io/badge/licencia-GPL--3.0-blue)
 
-## Los dos ajustes
+## Capturas
 
-- **Tema FLinux-JC por defecto**
-  - `ON`: el aspecto de la ISO — fondo de lava, iconos Adwaita, Conky naranja.
-  - `OFF`: aspecto base neutro — fondo sólido, GTK Raleigh, iconos hicolor,
-    Conky gris azulado.
+La ventana de FLSkin, con los dos interruptores en ON:
 
-- **Modo oscuro (GTK + FLTK)**
-  - `ON`: tema **Adwaita-dark** real para GTK2 y GTK3 (incluido en el paquete)
-    y, a la vez, **paleta oscura para las aplicaciones FLTK** (FLFM, FLRadio,
-    FLTube, FLWriter, FLPlayer, FLConnect…), escrita como bloque marcado en
-    `~/.Xdefaults` para que FLTK la lea al abrir cada app.
-  - `OFF`: vuelta al tema claro y el bloque FLTK se retira de `~/.Xdefaults`.
+![Ventana de FLSkin](capturas/ventana.png)
 
-La barra de título FLWM con degradado de 3 colores **no se toca en ningún
-modo**: es el FLWM parcheado de FLinux-JC y va siempre.
+Con el modo oscuro activo, las aplicaciones FLTK abren en oscuro: el
+gestor de archivos FLFM en la esquina inferior izquierda, sobre el fondo
+de lava de FLinux-JC:
 
-El estado se guarda en `~/.flskin.conf`; todo lo que escribe FLSkin vive bajo
-`$HOME`, así que la copia de seguridad normal de Tiny Core (filetool) lo
-conserva entre reinicios. Como es habitual, los temas nuevo se aplican en las
-aplicaciones que se **abran** después del cambio; las ya abiertas conservan su
-aspecto hasta reabrirlas.
+![Modo oscuro en FLFM](capturas/modo-oscuro.png)
 
-## Descarga (Release v1.0)
+## Cómo se usa
 
-Tres archivos, los tres van juntos:
+1. Abre **FLSkin** desde el icono del wbar o ejecutando `flskin`.
+2. **«Tema FLinux-JC por defecto»**
+   - **ON**: el aspecto de la ISO — fondo de lava, iconos Adwaita y
+     Conky naranja.
+   - **OFF**: aspecto base neutro — fondo sólido, GTK Raleigh, iconos
+     hicolor y Conky gris azulado.
+3. **«Modo oscuro (GTK + FLTK)»**
+   - **ON**: Adwaita-dark para las aplicaciones GTK y paleta oscura
+     para las FLTK (FLFM, FLRadio, FLTube, FLWriter, FLConnect…).
+   - **OFF**: vuelta al tema claro.
+4. El botón activo va resaltado en naranja. El cambio de tema (fondo y
+   Conky) se ve al momento; el de GTK/FLTK se aplica en las aplicaciones
+   que **abras después** — las ya abiertas conservan su aspecto hasta
+   reabrirlas.
 
-- `flskin.tcz` — la extensión (53 KB).
-- `flskin.tcz.dep` — dependencias: solo `fltk-1.3.tcz`.
-- `flskin.tcz.md5.txt` — suma MD5 del `.tcz` para comprobar la descarga.
+La barra de título de FLWM, con su degradado de tres colores, no se toca
+en ningún modo: es parte de FLinux-JC y va siempre.
+
+FLSkin corre como el usuario `tc`, sin root. Su estado se guarda en
+`~/.flskin.conf` y todo lo que escribe vive bajo `$HOME`, así que la
+copia de seguridad habitual de Tiny Core (filetool) lo conserva entre
+reinicios.
+
+## Cómo está hecho
+
+Un solo archivo de C++ con FLTK 1.3 (`flskin.cpp`). Al pulsar un
+interruptor, FLSkin escribe la configuración que cada toolkit lee al
+arrancar y guarda su estado en `~/.flskin.conf`:
+
+- `~/.gtkrc-2.0` — tema e iconos GTK2 (Adwaita, Adwaita-dark o Raleigh).
+- `~/.config/gtk-3.0/settings.ini` — lo mismo para GTK3.
+- `~/.Xdefaults` — la paleta oscura de FLTK va en un bloque marcado
+  (`! FLSKIN-DARK-BEGIN` … `! FLSKIN-DARK-END`) que se añade o se retira
+  sin tocar el resto del archivo.
+- El tema Adwaita-dark real va **incluido en el paquete**, porque el
+  repositorio de Tiny Core no lo trae.
+
+Al cambiar el tema por defecto, además, copia el Conky elegido a
+`~/.conkyrc` y pone el fondo con `flbg` (el de lava o el neutro que trae
+el paquete); conky y wbar se reinician para recoger el nuevo fondo.
+FLWM no se modifica en ningún caso.
+
+## Instalación
+
+De la **Release v1.0** descarga los tres archivos, juntos:
+
+- `flskin.tcz` — la extensión.
+- `flskin.tcz.dep` — dependencias (solo `fltk-1.3.tcz`).
+- `flskin.tcz.md5.txt` — suma MD5 para comprobar la descarga.
 
 **Tamaño:** 53 248 bytes · **MD5:** `c1c605b0572c7298739903ccc05c62e7`
 
-## Instalación en Tiny Core 17.1 x86 (FLinux-JC)
+```sh
+md5sum -c flskin.tcz.md5.txt
+tce-load -i flskin.tcz
+```
 
-1. Comprueba la descarga:
+(carga también `fltk-1.3.tcz` si no lo tienes), y abre FLSkin desde el
+icono o ejecutando `flskin`.
 
-   ```
-   md5sum -c flskin.tcz.md5.txt
-   ```
+## Compilar
 
-2. Instala sin descargar nada más (carga también `fltk-1.3.tcz` si no está):
+En Tiny Core 32 bits con FLTK 1.3 de desarrollo:
 
-   ```
-   tce-load -i flskin.tcz
-   ```
+```sh
+g++ -O2 -o flskin flskin.cpp $(fltk-config --cxxflags --ldflags)
+```
 
-3. Ejecuta `flskin` o búscalo en el menú de aplicaciones.
+## Créditos
 
-En la ISO **FLinux-JC v1.5** viene preinstalado (con la versión anterior);
-para actualizarlo basta sustituir el paquete en
-`/etc/sysconfig/tcedir/optional/` y reiniciar.
-
-## Qué trae dentro el paquete
-
-- El binario `flskin` (i686, FLTK 1.3).
-- El tema **Adwaita-dark** para GTK2/GTK3 en `/usr/local/share/themes/`
-  (el repositorio de FLinux no lo trae; procede de `gnome-themes-extra`).
-- Los dos Conkyrc (lava y neutro) y el fondo neutro.
-- Entrada de menú `flskin.desktop` e icono.
-
-## Código fuente
-
-`flskin.cpp` está en la raíz de este repositorio. Se compila para i686 contra
-FLTK 1.3 (Tiny Core trae `fltk-1.3.tcz`).
+- **FLinux-JC** — la distribución para la que está pensado.
+- La **comunidad FLTK**, por la biblioteca gráfica.
+- **Tiny Core Linux**, por la base.
 
 ## Licencia
 
-GPL-3.0. Autor: Juan Carlos Rodríguez Fuentes (FLinux-JC).
+GPL-3.0 (archivo `LICENSE`).
